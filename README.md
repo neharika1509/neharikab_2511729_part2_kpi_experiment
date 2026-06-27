@@ -1,34 +1,40 @@
-# neharikab_2511729_part2_kpi_experiment
+# Campaign Experiment Analysis
 
+**Project:** New Onboarding & Activation Campaign — A/B Test Analysis
+**Role:** Business Analyst
+**Date:** June 2026
+
+---
 
 ## 1. Business Context
 
 A subscription-based digital product company launched a new onboarding and activation campaign with the objective of improving user conversion and early engagement. Users were randomly divided into two groups:
 
-- Control group: Existing onboarding experience (n = 690)
-- Treatment group: New campaign experience (n = 710)
+- **Control group:** Existing onboarding experience (n = 690)
+- **Treatment group:** New campaign experience (n = 710)
 
 Leadership needs to decide whether to roll out the Treatment experience to all users. The task is to frame the business problem, define the right success metrics, analyse experiment results, evaluate guardrail metrics, and deliver a data-backed launch recommendation.
 
 **Business decision:** Should the new onboarding and activation campaign be launched to all users?
 
+---
 
 ## 2. Dataset Description
 
-File: campaign_experiment_data.xlsx (raw) → experiment_analysis.xlsx (cleaned)
+**File:** `campaign_experiment_data.xlsx` (raw) → `experiment_analysis.xlsx` (cleaned)
 
 | Property | Detail |
-
+|---|---|
 | Raw rows | 1,408 |
 | Clean rows | 1,400 (8 duplicate user IDs removed) |
 | Columns (raw) | 16 |
-| Columns (clean) | 17 (+1 flag: is_revenue_outlier) |
+| Columns (clean) | 17 (+1 flag: `is_revenue_outlier`) |
 | Observation window | 30 days post sign-up |
 
 **Column reference:**
 
 | Column | Type | Description |
-
+|---|---|---|
 | `user_id` | String | Unique user identifier |
 | `signup_date` | Date | Date user signed up |
 | `experiment_group` | Categorical | Control or Treatment |
@@ -50,7 +56,7 @@ File: campaign_experiment_data.xlsx (raw) → experiment_analysis.xlsx (cleaned)
 **Data quality actions taken:**
 
 | Issue | Count | Action |
-
+|---|---|---|
 | Duplicate user IDs | 8 | Removed — first occurrence kept |
 | Missing `device_type` | 18 | Filled with `'Unknown'` — rows retained |
 | Missing `traffic_source` | 24 | Filled with `'Unknown'` — rows retained |
@@ -61,7 +67,7 @@ File: campaign_experiment_data.xlsx (raw) → experiment_analysis.xlsx (cleaned)
 
 Full cleaning documentation is available in the **Data Quality Log** sheet of `experiment_analysis.xlsx`.
 
-
+---
 
 ## 3. North Star Metric Selected
 
@@ -82,14 +88,14 @@ Higher paid conversion directly increases Monthly Recurring Revenue (MRR) and cu
 **Risk of optimising blindly:**
 Maximising conversion without guardrails could attract low-intent users who cancel quickly, inflate refund rates, or overwhelm the support team — all of which destroy revenue quality and customer satisfaction.
 
-
+---
 
 ## 4. KPI Tree Summary
 
 The North Star (Paid Conversion Rate) is driven by three primary categories, each with two sub-drivers, and is bounded by four guardrail metrics.
 
 ```
-                        PAID CONVERSION RATE 
+                        PAID CONVERSION RATE ⭐
                          (North Star Metric)
                                 │
           ┌─────────────────────┼─────────────────────┐
@@ -112,7 +118,7 @@ The North Star (Paid Conversion Rate) is driven by three primary categories, eac
 - **Conversion Quality** — Are users completing the journey and becoming engaged? (onboarding completion, engagement score)
 - **Retention Health** — Are converted users generating sustainable value? (revenue per converted user, days to convert)
 
-
+---
 
 ## 5. Experiment Analysis Approach
 
@@ -137,14 +143,14 @@ The North Star (Paid Conversion Rate) is driven by three primary categories, eac
 
 6. **Guardrail evaluation** — Assessed refund rate, support ticket rate, engagement score, and revenue per converted user independently to check for harm. Documented in `analysis/hypothesis_test_notes.md`.
 
-
+---
 
 ## 6. Hypothesis Test Summary
 
 **Primary test: Paid Conversion Rate**
 
 | Parameter | Value |
-
+|---|---|
 | H₀ | p_treatment − p_control = 0 (no difference) |
 | H₁ | p_treatment − p_control ≠ 0 (two-tailed) |
 | Test | Two-proportion Z-test |
@@ -159,7 +165,7 @@ The North Star (Paid Conversion Rate) is driven by three primary categories, eac
 **Key results across all metrics:**
 
 | Metric | Test Statistic | p-value | 95% CI | Significant? |
-
+|---|---|---|---|---|
 | Landing page visit rate | Z = 3.54 | 0.0004 | [+3.90 pp, +13.64 pp] | Yes |
 | Trial start rate | Z = 1.66 | 0.0970 | [−0.71 pp, +8.59 pp] | No |
 | Onboarding completion rate | Z = 2.64 | 0.0083 | [+1.43 pp, +9.52 pp] | Yes |
@@ -175,11 +181,12 @@ The North Star (Paid Conversion Rate) is driven by three primary categories, eac
 
 Full test details and formulas: `analysis/hypothesis_test_notes.md`
 
-
+---
 
 ## 7. Guardrail Metrics Considered
 
 | Guardrail Metric | Control | Treatment | p-value | 95% CI | Risk Level |
+|---|---|---|---|---|---|
 | Refund rate | 0.00% | 0.42% | 0.087 | [−0.055 pp, +0.900 pp] | 🟡 Low — monitor post-launch |
 | Support ticket rate | 22.0% | 37.3% | < 0.001 | [+5.87 pp, +14.14 pp] | 🔴 High — must fix before full launch |
 | Avg revenue per converted user | $1,115 | $960 | 0.011 | [−$1,827.83, +$108.45] | 🟡 Watch — CI too wide to conclude |
@@ -190,7 +197,7 @@ Full test details and formulas: `analysis/hypothesis_test_notes.md`
 - Refund rate and revenue per converted user warrant monitoring but do not block launch.
 - Engagement score is a guardrail positive — higher engagement reduces churn risk.
 
-
+---
 
 ## 8. Final Recommendation
 
@@ -203,14 +210,14 @@ The one confirmed risk — support ticket rate — is operationally serious and 
 **Action plan:**
 
 | Timeline | Action |
-
+|---|---|
 | Immediately | Launch Treatment to 25–50% of new users (phased rollout) |
 | Week 1–2 | Investigate support tickets — identify which onboarding steps drive the most contacts |
 | Week 2–4 | Fix top friction points; re-measure ticket rate on phased cohort |
 | Week 4 | If ticket rate narrows to within 5 pp of Control → proceed to full launch |
 | Month 2 | 60-day cohort analysis — track churn and LTV of Treatment converters |
 
-
+---
 
 ## 9. Assumptions and Limitations
 
@@ -228,8 +235,24 @@ The one confirmed risk — support ticket rate — is operationally serious and 
 - **West region underperformance:** Smallest conversion lift across all regions (+1.7 pp) — possible geographic messaging or UX mismatch
 - **No long-term churn data:** Cannot assess whether Treatment conversions retain at the same rate as Control conversions within this dataset
 
-
+---
 
 ## 10. Screenshots Included
-screenshots/kpi_tree_preview.png consists the KPI tree diagram showing North Star, primary drivers, sub-drivers, and guardrail metrics 
-screenshots/hypothesis_test_output.png consists of the Hypothesis test results table from `experiment_summary.xlsx` 
+
+| File | Contents |
+|---|---|
+| `screenshots/kpi_tree_preview.png` | KPI tree diagram showing North Star, primary drivers, sub-drivers, and guardrail metrics |
+| `screenshots/hypothesis_test_output.png` | Hypothesis test results table from `experiment_summary.xlsx` |
+
+---
+
+## Output Files Reference
+
+| File | Location | Description |
+|---|---|---|
+| `README.md` | `/` | This file — project overview and full documentation |
+| `experiment_analysis.xlsx` | `analysis/` | Cleaned dataset (1,400 rows) with Data Quality Log and Summary Stats |
+| `experiment_summary.xlsx` | `outputs/` | Hypothesis test results + segment analysis |
+| `hypothesis_test_notes.md` | `analysis/` | Full statistical methodology and test outputs |
+| `recommendation_memo.md` | `outputs/` | Final launch recommendation memo for leadership |
+| `kpi_tree.png` | `outputs/` | KPI tree diagram |
