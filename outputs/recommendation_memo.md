@@ -50,7 +50,7 @@ Guardrail metrics - Refund Rate, Support Ticket Rate, Revenue Quality, Segment-l
 All tests are two-tailed at α = 0.05. Proportions use two-proportion Z-tests; continuous metrics use Welch two-sample t-tests. Confidence intervals are at the 95% level.
 
 | Metric | Control | Treatment | 95% CI (Treatment − Control) | Test Statistic | p-value | Significant? |
-
+|---|---|---|---|---|---|---|
 | Users | 690 | 710 | — | — | — | — |
 | Landing page visit rate | 63.6% | 72.4% | [+3.90 pp, +13.64 pp] | Z = 3.54 | 0.0004 | Yes |
 | Trial start rate | 25.1% | 29.0% | [−0.71 pp, +8.59 pp] | Z = 1.66 | 0.0970 | No |
@@ -72,7 +72,7 @@ Revenue per converted user: statistically significant but CI crosses zero — in
 A two-tailed, two-proportion Z-test was conducted on the primary metric.
 
 | Parameter | Value |
-
+|---|---|
 | H₀ | p_treatment − p_control = 0 |
 | H₁ | p_treatment − p_control ≠ 0 |
 | Test type | Two-proportion Z-test (two-tailed) |
